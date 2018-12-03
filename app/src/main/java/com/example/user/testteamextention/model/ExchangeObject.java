@@ -11,10 +11,16 @@ public class ExchangeObject {
     @SerializedName("to")
     @Expose
     private String to;
+
     @SerializedName("rate")
     @Expose
-    private String rate;
+    private double rate;
 
+    public ExchangeObject(String from, String to, double rate){
+        this.from = from;
+        this.to = to;
+        this.rate = rate;
+    }
     public String getFrom() {
         return from;
     }
@@ -31,11 +37,11 @@ public class ExchangeObject {
         this.to = to;
     }
 
-    public String getRate() {
+    public double getRate() {
         return rate;
     }
 
-    public void setRate(String rate) {
+    public void setRate(double rate) {
         this.rate = rate;
     }
 

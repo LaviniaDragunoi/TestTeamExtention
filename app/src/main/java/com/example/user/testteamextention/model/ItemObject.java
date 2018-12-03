@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class ItemObject implements Parcelable {
+public class ItemObject implements Parcelable{
 
     @SerializedName("sku")
     @Expose
@@ -20,7 +20,13 @@ public class ItemObject implements Parcelable {
     @Expose
     private String currency;
 
-    private ItemObject(Parcel in) {
+    public ItemObject (String sku, Double amount, String currency){
+        this.sku = sku;
+        this.amount = amount;
+        this.currency = currency;
+    }
+
+    protected ItemObject(Parcel in) {
         sku = in.readString();
         if (in.readByte() == 0) {
             amount = null;
@@ -74,9 +80,12 @@ public class ItemObject implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(sku);
-
-        dest.writeDouble(amount);
-
+        if (amount == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeDouble(amount);
+        }
         dest.writeString(currency);
     }
 }

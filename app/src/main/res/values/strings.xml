@@ -3,5 +3,7 @@
     <string name="get">Get Transactions</string>
     <string name="sku_string">SKU</string>
     <string name="amount">Amount</string>
-    <string name="currency">Currency</string>
+    <string name="currency">Currency</string>f
+    <string name="loading_message">The list of items will load.</string>
+    <string name="gold_title">Gold</string>
 </resources>
