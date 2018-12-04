@@ -5,5 +5,5 @@
     <string name="amount">Amount</string>
     <string name="currency">Currency</string>f
     <string name="loading_message">The list of items will load.</string>
-    <string name="gold_title">Gold</string>
+    <string name="gold_title">Total amount in Gold</string>
 </resources>

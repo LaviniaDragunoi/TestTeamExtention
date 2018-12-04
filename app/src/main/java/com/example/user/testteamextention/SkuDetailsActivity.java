@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -18,6 +19,7 @@ import com.example.user.testteamextention.model.ItemObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -35,12 +37,13 @@ public class SkuDetailsActivity extends AppCompatActivity {
     @BindView(R.id.sku_id_tv)
      TextView skuIdTV;
 
-     @BindView(R.id.all_transactions)
-     TextView allTransactionsAmount;
+     @BindView(R.id.all_transactions_rv)
+     RecyclerView skuRecyclerView;
 
      String skuIdString;
      ArrayList<ItemObject> itemsList;
      String currencySKU;
+    List<ExchangeObject> exchangeRates;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,28 +57,8 @@ public class SkuDetailsActivity extends AppCompatActivity {
             currencySKU = intent.getStringExtra(SKU_CURRENCY);
 
         }
-
        display();
-    }
 
-    private void display() {
-        skuIdTV.setText(skuIdString);
-
-    }
-
-    private double getTotal(ArrayList<ItemObject> itemsList){
-        double total = 0;
-        for(int i=0; i < itemsList.size(); i++){
-            if(itemsList.get(i).getSku().equals(skuIdString)){
-
-            }
-        }
-        return total;
-    }
-
-    private double exchangeCurrency(final String currencySKU){
-
-        final double[] exchangeRateForTheCurrencySKU = new double[0];
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
@@ -87,12 +70,11 @@ public class SkuDetailsActivity extends AppCompatActivity {
                     public void onResponse(@NonNull Call<List<ExchangeObject>> call,
                                            @NonNull Response<List<ExchangeObject>> response) {
 
-                        List<ExchangeObject> exchangeRates = response.body();
-                        for(int i=0;i< exchangeRates.size(); i++){
-                            if(currencySKU.equals(exchangeRates.get(i).getFrom())&& exchangeRates.get(i).getTo().equals("Gold")){
-                               exchangeRateForTheCurrencySKU[0] = exchangeRates.get(i).getRate(); 
-                            }
+                        exchangeRates = response.body();
+                        for (int i = 0; i < Objects.requireNonNull(exchangeRates).size(); i++){
+
                         }
+
                     }
 
                     @Override
@@ -105,6 +87,25 @@ public class SkuDetailsActivity extends AppCompatActivity {
             }
 
         });
-return exchangeRateForTheCurrencySKU[0];
+
+
     }
+
+    private void display() {
+
+        skuIdTV.setText(skuIdString);
+        DividerItemDecoration itemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
+        itemDecoration.setDrawable(getResources().getDrawable(R.drawable.item_separator));
+
+        skuRecyclerView.addItemDecoration(itemDecoration);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(SkuDetailsActivity.this);
+        skuRecyclerView.setLayoutManager(layoutManager);
+        skuRecyclerView.setAdapter(new ItemAdapter(SkuDetailsActivity.this, itemsList));
+    }
+
+    private double exchangeRateInGold(double currency, double rate){
+        return currency/rate;
+    }
+
+
 }

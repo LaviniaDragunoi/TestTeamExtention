@@ -23,7 +23,6 @@ import butterknife.ButterKnife;
 public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder> {
 
     public static final String SKU_NAME = "skuName" ;
-    public static final String SKU_AMOUNT = "amount" ;
     public static final String SKU_CURRENCY = "currency";
     public static final String ITEMS = "itemsList" ;
     private ArrayList<ItemObject> items;
@@ -54,14 +53,19 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
        TextView currency = holder.currencyTextView;
        final String currencySTring = itemObjects.getCurrency();
        currency.setText(currencySTring);
+       final ArrayList<ItemObject> sameSkuList = new ArrayList<>();
 
        holder.itemView.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View v) {
+               for(int i=0; i< items.size(); i++){
+                   if(items.get(i).getSku().equals(skuNameString)){
+                       sameSkuList.add(items.get(i));
+                   }
+               }
                Intent intent = new Intent(holder.itemView.getContext(), SkuDetailsActivity.class);
-               intent.putParcelableArrayListExtra(ITEMS, items);
+               intent.putParcelableArrayListExtra(ITEMS, sameSkuList);
                intent.putExtra(SKU_NAME,skuNameString);
-             //  intent.putExtra(SKU_AMOUNT, itemObjects.getAmount());
                intent.putExtra(SKU_CURRENCY, currencySTring);
                holder.itemView.getContext().startActivity(intent);
            }
